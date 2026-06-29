@@ -2,7 +2,7 @@
 
 import adsk.core
 import adsk.fusion
-import traceback, time, os, re
+import traceback, time, os, re, json
 
 app = adsk.core.Application.get()
 ui  = app.userInterface
@@ -70,7 +70,11 @@ $andymarkComponents
               else:
                 return True
       return False
-    
+
+    this_dir = os.path.dirname(os.path.realpath(__file__))
+    with open(os.path.join(this_dir, "config/config.json"), 'r') as file:
+      config = json.load(file)
+
     hasHoleIssue = False
     linkedComponents = 0
     bodyCount = 0
@@ -114,8 +118,7 @@ $andymarkComponents
             if body.volume == 0:
               message += body.name + ' in component ' + occurrence.name + ' has no volume\n'
 
-            totalSmallM4s = 0
-            totalSmallBearings = 0
+            totalSmallHoles = {hole['name']: 0 for hole in config['holes']}
             ec = body.edges.count
             edgeCount += ec
             if ec == 0:
@@ -126,17 +129,15 @@ $andymarkComponents
               if edge is None:
                 continue
               if edge.objectType == circleType:
-                if abs(4 - edge.radius) < 0.1: # type: ignore
-                  totalSmallM4s += 1
-                elif abs(14 - edge.radius) < 0.1: # type: ignore
-                  totalSmallBearings += 1
+                for hole in config['holes']:
+                  if abs(hole['sizeCm'] - edge.radius) < hole['minClearance']: # type: ignore
+                    totalSmallHoles[hole['name']] += 1
+            
+            for i, (name, amt) in enumerate(totalSmallHoles.items()):
+              if amt > 0:
+                message += body.name + ' in component ' + occurrence.name + f' has {amt} {name} hole{"s" if amt != 1 else ""} that have too low diametrical clearance (minimum {config["holes"][i]["minClearance"] * 10} mm)\n'
 
-            if totalSmallM4s > 0:
-              message += body.name + ' in component ' + occurrence.name + f' has {totalSmallM4s} M4 hole{"s" if totalSmallM4s != 1 else ""} that have too low diametrical clearance (minimum 0.2 mm, recommended 0.2 mm, maximum 0.8mm)'
-            if totalSmallBearings > 0:
-              message += body.name + ' in component ' + occurrence.name + f' has {totalSmallM4s} bearing hole{"s" if totalSmallM4s != 1 else ""} that have too low diametrical clearance (minimum 0.2 mm, recommended 0.2 mm, maximum 0.8mm)'
-
-            hasHoleIssue = totalSmallM4s + totalSmallBearings > 0
+            hasHoleIssue = sum(totalSmallHoles.values())
     
     refs = app.activeDocument.documentReferences
     if refs:
@@ -164,9 +165,8 @@ $andymarkComponents
     palettes = ui.palettes
     palette = palettes.itemById('scrollable_message_palette')
 
-    this_dir = os.path.dirname(os.path.realpath(__file__))
-    with open(os.path.join(this_dir, "template.html"), 'r') as file:
-      html_path = os.path.join(this_dir, "scrollable.html")
+    with open(os.path.join(this_dir, "assets/template.html"), 'r') as file:
+      html_path = os.path.join(this_dir, "assets/scrollable.html")
       with open(html_path, 'w') as output:
         output.write(file.read().replace('$longText', message, 1))
 

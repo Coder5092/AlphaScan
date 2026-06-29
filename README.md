@@ -23,6 +23,11 @@ First, download all code in this repository as a ZIP file. After extraction, ope
 
 ## Release History
 
+### Hotfix Alpha 1.1 (6/29/2026)
+
+Fixed issue where edge.radius reports size in centimeters. \
+Added config.json and organized assets.
+
 ### Release Alpha 1.0 (6/29/2026)
 
 First release!

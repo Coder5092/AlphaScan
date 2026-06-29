@@ -5,8 +5,8 @@
 	"description":	{
 		"":	"Scans your file for stupid things. Lock in!"
 	},
-	"version":	"Alpha 1.0",
+	"version":	"Alpha 1.1",
 	"supportedOS":	"windows|mac",
 	"editEnabled":	true,
-	"iconFilename":	"ScriptIcon.svg"
+	"iconFilename":	"assets/ScriptIcon.svg"
 }

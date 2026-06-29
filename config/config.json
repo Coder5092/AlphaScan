@@ -1,0 +1,24 @@
+{
+  "holes": [
+    {
+      "name": "M2.5",
+      "sizeCm": 0.25,
+      "minClearance": 0.01
+    },
+    {
+      "name": "M3",
+      "sizeCm": 0.3,
+      "minClearance": 0.01
+    },
+    {
+      "name": "M4",
+      "sizeCm": 0.4,
+      "minClearance": 0.01
+    },
+    {
+      "name": "nearing",
+      "sizeCm": 1.4,
+      "minClearance": 0.01
+    }
+  ]
+}
