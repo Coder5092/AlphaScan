@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    /* 1. Force the root elements to lock to full window boundaries */
+    html,
+    body {
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      /* Stops dual scrollbar glitching */
+      background-color: #2b2b2b;
+      color: #eeeeee;
+      font-family: "Segoe UI", sans-serif;
+    }
+
+    /* 2. Setup absolute box container to bypass viewport parsing bugs */
+    .wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+    }
+
+    /* 3. Force scroll pane to grow automatically into available space */
+    .scroll-container {
+      flex: 1 1 auto;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      margin-bottom: 15px;
+      background: #222222;
+      /* Slightly darker to distinguish block */
+      padding: 10px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrapper">
+    <div class="scroll-container">$longText</div>
+  </div>
+  <!-- <script>
+    document.addEventListener('DOMContentLoaded', () => window.setTimeout(() => document.querySelector('.scroll-container').getBoundingClientRect(), 500));
+  </script> -->
+  <script>
+    function forceLayoutReflow() {
+      // Read actual physical dimensions granted by Fusion 360
+      var actualHeight = window.innerHeight;
+      var actualWidth = window.innerWidth;
+
+      // Explicitly force the CSS boundaries to lock onto the actual screen dimensions
+      var wrapper = document.getElementById('mainWrapper');
+      wrapper.style.height = actualHeight + 'px';
+      wrapper.style.width = actualWidth + 'px';
+
+      // Dispatch a fake resize event to kick the layout engine out of its tiny state
+      window.dispatchEvent(new Event('resize'));
+    }
+
+    // Trigger the recalculation loop immediately when the DOM loads and again after a short delay
+    window.addEventListener('DOMContentLoaded', forceLayoutReflow);
+    window.addEventListener('load', function () {
+      setTimeout(forceLayoutReflow, 100);
+    });
+  </script>
+</body>
+
+</html>
