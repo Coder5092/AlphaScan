@@ -16,7 +16,7 @@
       "minClearance": 0.01
     },
     {
-      "name": "nearing",
+      "name": "bearing",
       "sizeCm": 1.4,
       "minClearance": 0.01
     }

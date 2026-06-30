@@ -1,11 +1,12 @@
 {
 	"autodeskProduct":	"Fusion",
-	"type":	"script",
+	"type":	"addin",
 	"author":	"Alphabots 16026",
 	"description":	{
 		"":	"Scans your file for stupid things. Lock in!"
 	},
-	"version":	"Alpha 1.1",
+	"version":	"Alpha 1.2",
+	"runOnStartup":	true,
 	"supportedOS":	"windows|mac",
 	"editEnabled":	true,
 	"iconFilename":	"assets/ScriptIcon.svg"
